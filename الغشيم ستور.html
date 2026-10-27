@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الغشيم ستور | El Ghasheem Store - شحن ألعاب وبطاقات رقمية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accentBlue: '#2563eb',
+                        accentGold: '#f59e0b',
+                        brandOrange: '#ff6b00',
+                        brandPurple: '#7c3aed'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px -5px rgba(37, 99, 235, 0.4);
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #f59e0b;
+        }
+        /* Custom modal transition */
+        .modal-active {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-accentGold selection:text-black">
+
+    <!-- Top Navigation Header (SEAGM Style) -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl">
+        <!-- Top Ticker / Info Bar -->
+        <div class="bg-gradient-to-r from-brandOrange via-amber-600 to-amber-500 text-xs py-1.5 px-4 text-center font-bold text-slate-950 flex justify-between items-center px-4 md:px-12">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt animate-bounce"></i>
+                <span>شحن فورى وآمن 100% | خدمة العملاء تعمل 24/7</span>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <span><i class="fa-brands fa-whatsapp ml-1"></i> 01090093053</span>
+                <span><i class="fa-solid fa-shield-halved ml-1"></i> ضمان تسليم فوري</span>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-amber-500 to-brandOrange rounded-xl flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg border border-amber-300/30">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-1">
+                            الغشيم <span class="text-amber-400 text-lg font-extrabold uppercase">STORE</span>
+                        </h1>
+                        <p class="text-[10px] text-slate-400 tracking-wider">EL GHASHEEM STORE - رقم 1 للشحن</p>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-xl mx-4 hidden sm:block">
+                    <div class="relative">
+                        <input type="text" id="searchInput" oninput="filterGames()" placeholder="ابحث عن لعبتك المفضلة أو بطاقتك (مثال: PUBG, Free Fire, PlayStation)..." 
+                            class="w-full bg-slate-800/80 text-sm text-white placeholder-slate-400 rounded-full py-2.5 px-5 pr-11 border border-slate-700 focus:outline-none focus:border-amber-500 transition-all shadow-inner">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
+                    </div>
+                </div>
+
+                <!-- Quick Action Buttons -->
+                <div class="flex items-center gap-3">
+                    <a href="https://wa.me/201090093053" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 px-3 sm:px-4 rounded-full flex items-center gap-2 transition-all shadow-md">
+                        <i class="fa-brands fa-whatsapp text-base"></i>
+                        <span class="hidden sm:inline">الدعم الفني</span>
+                    </a>
+                    <button onclick="toggleAiChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold py-2 px-3 sm:px-4 rounded-full flex items-center gap-2 transition-all glow-blue">
+                        <i class="fa-solid fa-robot text-amber-300"></i>
+                        <span class="hidden sm:inline">مساعد الذكاء الاصطناعي</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="mt-3 sm:hidden">
+                <div class="relative">
+                    <input type="text" id="searchInputMobile" oninput="syncAndFilter(this.value)" placeholder="ابحث عن لعبة أو بطاقة..." 
+                        class="w-full bg-slate-800 text-sm text-white placeholder-slate-400 rounded-full py-2 px-4 pr-10 border border-slate-700 focus:outline-none focus:border-amber-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner & Announcement Carousel -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 border border-slate-800 p-6 md:p-10 shadow-2xl">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80')] opacity-10 bg-cover bg-center"></div>
+            <div class="relative z-10 grid md:grid-cols-3 gap-6 items-center">
+                <div class="md:col-span-2 space-y-4">
+                    <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-extrabold px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-fire text-amber-400"></i> أقوى عروض الشحن في مصر
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-black text-white leading-tight">
+                        شحن ألعابك وبطاقاتك بسرعة البرق من <span class="text-amber-400">الغشيم ستور</span>
+                    </h2>
+                    <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                        نوفر جميع باقات الشحن المعتمدة لأشهر الألعاب بأسعار تبدأ من <strong class="text-amber-400 font-extrabold">80 جنيه مصري فقط</strong>. شحن مباشر وآمن بواسطة فودافون كاش، إنستا باي وكافة وسائل الدفع.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300">
+                            <i class="fa-solid fa-check-circle text-emerald-400"></i> شحن فوري بـ ID
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300">
+                            <i class="fa-solid fa-shield text-blue-400"></i> طرق دفع محلي 100%
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-300">
+                            <i class="fa-solid fa-headset text-amber-400"></i> تأكيد آلي عبر واتساب
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:flex justify-center">
+                    <div class="relative">
+                        <div class="w-48 h-48 rounded-full bg-gradient-to-tr from-amber-500/30 to-blue-600/30 animate-pulse absolute -inset-2 blur-xl"></div>
+                        <div class="relative bg-slate-800 border-2 border-amber-500/50 p-4 rounded-2xl shadow-2xl text-center space-y-3">
+                            <i class="fa-solid fa-crown text-5xl text-amber-400"></i>
+                            <div class="font-extrabold text-white text-lg">الأسعار تبدأ من 80 ج.م</div>
+                            <span class="text-xs text-slate-400 block">اختر لعبتك الآن وابدأ الشحن</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Filter Tabs -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="text-xl font-black text-white flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-amber-400"></i>
+                جميع الألعاب والبطاقات المتاحة
+            </h3>
+            <span class="text-xs text-slate-400" id="gamesCount">جاري تحميل الألعاب...</span>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex gap-2 overflow-x-auto py-4 scrollbar-thin">
+            <button onclick="filterCategory('all')" class="cat-btn active bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all shadow">
+                الكل 🔥
+            </button>
+            <button onclick="filterCategory('mobile')" class="cat-btn bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all">
+                ألعاب الموبايل 📱
+            </button>
+            <button onclick="filterCategory('pc')" class="cat-btn bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all">
+                ألعاب الـ PC والكونسول 🎮
+            </button>
+            <button onclick="filterCategory('giftcards')" class="cat-btn bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all">
+                بطاقات الهدايا والشحن 💳
+            </button>
+        </div>
+    </section>
+
+    <!-- Games Grid Display -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6 flex-1">
+        <div id="gamesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+            <!-- Games cards will be dynamically injected here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="noResults" class="hidden text-center py-16 bg-slate-900/50 rounded-2xl border border-slate-800 my-8">
+            <i class="fa-solid fa-gamepad text-5xl text-slate-600 mb-3"></i>
+            <h4 class="text-lg font-bold text-slate-300">لم يتم العثور على اللعبة أو البطاقة!</h4>
+            <p class="text-xs text-slate-500 mt-1">تأكد من كتابة اسم اللعبة بشكل صحيح أو تواصل معنا للشحن المباشر</p>
+            <button onclick="resetFilters()" class="mt-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-5 py-2 rounded-lg">
+                عرض جميع الألعاب
+            </button>
+        </div>
+    </main>
+
+    <!-- Payment Methods Bar -->
+    <section class="bg-slate-900/80 border-t border-slate-800 py-6 my-6">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-xs text-slate-400 font-bold mb-4 uppercase tracking-wider">طرق الدفع المحلية والدولية المتاحة لعملائنا في مصر والوطن العربي</p>
+            <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-8 opacity-80">
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-red-400 flex items-center gap-1.5"><i class="fa-solid fa-wallet"></i> فودافون كاش</span>
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-orange-400 flex items-center gap-1.5"><i class="fa-solid fa-wallet"></i> أورنج كاش</span>
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-wallet"></i> اتصالات كاش</span>
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-purple-400 flex items-center gap-1.5"><i class="fa-solid fa-building-columns"></i> إنستا باي InstaPay</span>
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-blue-400 flex items-center gap-1.5"><i class="fa-solid fa-credit-card"></i> كارت بنكي (Visa/Mastercard)</span>
+                <span class="bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-xs font-bold text-yellow-400 flex items-center gap-1.5"><i class="fa-solid fa-store"></i> خدمة فوري Fawry</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Package Selection & Order Checkout -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative my-8 animate-fade-in max-h-[90vh] overflow-y-auto scrollbar-thin">
+            
+            <!-- Close Modal Button -->
+            <button onclick="closeModal()" class="absolute left-4 top-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Game Header Info -->
+            <div class="flex items-center gap-4 border-b border-slate-800 pb-4">
+                <img id="modalGameImg" src="" alt="Game Icon" class="w-16 h-16 rounded-xl object-cover border-2 border-amber-500/50 shadow-md">
+                <div>
+                    <h3 id="modalGameTitle" class="text-xl font-black text-white"></h3>
+                    <p id="modalGameSub" class="text-xs text-amber-400 font-bold mt-1"></p>
+                </div>
+            </div>
+
+            <!-- Step 1: Select Package -->
+            <div class="mt-5">
+                <label class="block text-xs font-extrabold text-slate-300 mb-3 flex items-center gap-2">
+                    <span class="w-5 h-5 bg-amber-500 text-slate-950 rounded-full flex items-center justify-center text-xs">1</span>
+                    اختر باقة الشحن المناسبة (تبدأ من 80 ج.م):
+                </label>
+                <div id="packagesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Packages injected here -->
+                </div>
+            </div>
+
+            <!-- Step 2: Player Information Form -->
+            <div class="mt-6 border-t border-slate-800 pt-5">
+                <label class="block text-xs font-extrabold text-slate-300 mb-3 flex items-center gap-2">
+                    <span class="w-5 h-5 bg-amber-500 text-slate-950 rounded-full flex items-center justify-center text-xs">2</span>
+                    بيانات حسابك للشحن:
+                </label>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">اسمك الكريـم <span class="text-red-500">*</span></label>
+                        <input type="text" id="custName" placeholder="أدخل اسمك الكامل" required
+                            class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">معرف اللاعب (Player ID / Account ID / E-mail) <span class="text-red-500">*</span></label>
+                        <input type="text" id="playerId" placeholder="أدخل الـ ID الخاص بك في اللعبة بدقة" required
+                            class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 text-sm focus:border-amber-500 focus:outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">رقم الواتساب للتواصل <span class="text-red-500">*</span></label>
+                        <input type="tel" id="custPhone" placeholder="مثال: 010xxxxxxxx" required
+                            class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 text-sm focus:border-amber-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Payment Method -->
+            <div class="mt-6 border-t border-slate-800 pt-5">
+                <label class="block text-xs font-extrabold text-slate-300 mb-3 flex items-center gap-2">
+                    <span class="w-5 h-5 bg-amber-500 text-slate-950 rounded-full flex items-center justify-center text-xs">3</span>
+                    اختر طريقة الدفع المناسبة لك:
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="paymentOptions">
+                    <label class="pay-card cursor-pointer bg-slate-800 border-2 border-amber-500 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="فودافون كاش (Vodafone Cash)" checked class="accent-amber-500">
+                        <span>فودافون كاش</span>
+                    </label>
+                    <label class="pay-card cursor-pointer bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="إنستا باي (InstaPay)" class="accent-amber-500">
+                        <span>إنستا باي InstaPay</span>
+                    </label>
+                    <label class="pay-card cursor-pointer bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="أورنج كاش (Orange Cash)" class="accent-amber-500">
+                        <span>أورنج كاش</span>
+                    </label>
+                    <label class="pay-card cursor-pointer bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="اتصالات كاش (Etisalat Cash)" class="accent-amber-500">
+                        <span>اتصالات كاش</span>
+                    </label>
+                    <label class="pay-card cursor-pointer bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="كارت بنكي (Visa / Mastercard)" class="accent-amber-500">
+                        <span>كارت بنكي Visa</span>
+                    </label>
+                    <label class="pay-card cursor-pointer bg-slate-800 border border-slate-700 p-2.5 rounded-xl flex items-center gap-2 text-xs text-white">
+                        <input type="radio" name="payMethod" value="خدمة فوري (Fawry Pay)" class="accent-amber-500">
+                        <span>فوري Fawry</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Total Price & Confirm Order -->
+            <div class="mt-6 bg-slate-800/90 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs text-slate-400 block">الإجمالي المطلوب تدفيعه:</span>
+                    <span id="summaryPrice" class="text-2xl font-black text-amber-400">اختر باقة أولاً</span>
+                </div>
+                <button onclick="submitOrderToWhatsapp()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-extrabold text-sm py-3 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    تأكيد الطلب والشحن المباشر
+                </button>
+            </div>
+
+            <p class="text-[10px] text-center text-slate-500 mt-3">
+                <i class="fa-solid fa-lock text-emerald-400"></i> بالضغط على "تأكيد الطلب"، ستحول تلقائياً للواتساب المعتمد لمحل <strong>الغشيم ستور</strong> لإتمام عملية الشحن في دقيقة.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- AI Chatbot Widget (El Ghasheem AI) -->
+    <div id="aiChatWidget" class="fixed bottom-4 left-4 z-50">
+        <!-- Floating Toggle Button -->
+        <button onclick="toggleAiChat()" id="aiToggleBtn" class="bg-gradient-to-r from-amber-500 to-brandOrange hover:scale-105 text-slate-950 font-black p-3.5 rounded-full shadow-2xl flex items-center gap-2 border-2 border-amber-300 transition-all glow-effect">
+            <i class="fa-solid fa-robot text-2xl"></i>
+            <span class="text-xs hidden sm:inline">مساعد الغشيم ستور AI</span>
+        </button>
+
+        <!-- Chat Window Box -->
+        <div id="aiChatBox" class="hidden fixed bottom-16 left-4 right-4 sm:right-auto sm:w-96 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col h-[480px] z-50 overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-3.5 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">مساعد الغشيم ستور الذكي</h4>
+                        <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل متوفر 24/7
+                        </span>
+                    </div>
+                </div>
+                <button onclick="toggleAiChat()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="aiChatMessages" class="flex-1 p-3 overflow-y-auto space-y-3 text-xs scrollbar-thin bg-slate-950/50">
+                <!-- Welcome Msg -->
+                <div class="bg-slate-800 border border-slate-700 text-slate-200 p-3 rounded-2xl rounded-tr-none max-w-[85%] space-y-1">
+                    <p class="font-bold text-amber-400 text-[11px]">مرحباً بك في الغشيم ستور! 👋</p>
+                    <p>أنا مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟ يمكنك استفساري عن أسعار الباقات، طرق الدفع، أو كيفية إيجاد הـ ID الخاص بك!</p>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="p-2.5 border-t border-slate-800 bg-slate-900 flex gap-2 items-center">
+                <input type="text" id="aiInput" onkeypress="handleAiKeyPress(event)" placeholder="اسأل المساعد عن الشحن أو طرق الدفع..." 
+                    class="flex-1 bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500">
+                <button onclick="sendAiMessage()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl transition-all">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-xs py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-right">
+            <div>
+                <h3 class="text-base font-black text-white mb-2 flex items-center justify-center md:justify-start gap-2">
+                    <i class="fa-solid fa-gamepad text-amber-400"></i> الغشيم ستور (El Ghasheem Store)
+                </h3>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    المتجر الأول المعتمد لشحن الألعاب والبطاقات الرقمية بأسعار تنافسية تبدأ من 80 جنيه مصري مع الضمان والتسليم الفوري.
+                </p>
+            </div>
+            <div class="space-y-1">
+                <h4 class="font-bold text-white mb-2">روابط سريعة</h4>
+                <p><a href="#" onclick="resetFilters()" class="hover:text-amber-400">قائمة الألعاب والبطاقات</a></p>
+                <p><a href="https://wa.me/201090093053" target="_blank" class="hover:text-amber-400">خدمة العملاء على الواتساب (01090093053)</a></p>
+                <p><a href="javascript:void(0)" onclick="toggleAiChat()" class="hover:text-amber-400">المساعد الذكي للشحن</a></p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-2">تواصل معنا المباشر</h4>
+                <p class="text-emerald-400 font-extrabold dir-ltr"><i class="fa-brands fa-whatsapp text-base"></i> +20 109 009 3053</p>
+                <p class="mt-1 text-slate-500">خدمة فورية وتأكيد في أقل من 3 دقائق</p>
+            </div>
+        </div>
+        <div class="border-t border-slate-900 mt-6 pt-4 text-center text-slate-600 text-[11px]">
+            جميع الحقوق محفوظة © 2026 لمتجر <strong>الغشيم ستور - El Ghasheem Store</strong>.
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Code -->
+    <script>
+        // Database of Games & Cards available in El Ghasheem Store
+        // Minimum price starting strictly at 80 EGP or higher
+        const gamesData = [
+            {
+                id: 'pubg',
+                title: 'PUBG Mobile - ببجي موبايل',
+                category: 'mobile',
+                badge: 'الأكثر طلباً 🔥',
+                img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '60 + 3 شدات UC', price: 80 },
+                    { name: '325 + 25 شدات UC', price: 210 },
+                    { name: '660 شدة UC (رويال باس)', price: 420 },
+                    { name: '1800 شدة UC', price: 1050 },
+                    { name: '3850 شدة UC', price: 2100 }
+                ]
+            },
+            {
+                id: 'freefire',
+                title: 'Free Fire - فري فاير',
+                category: 'mobile',
+                badge: 'عروض ممتازة ✨',
+                img: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '100 + 10 جوهرة 💎', price: 80 },
+                    { name: '210 + 21 جوهرة 💎', price: 150 },
+                    { name: '530 + 53 جوهرة 💎', price: 350 },
+                    { name: '1080 + 108 جوهرة 💎', price: 680 },
+                    { name: '2200 جوهرة 💎', price: 1350 }
+                ]
+            },
+            {
+                id: 'roblox',
+                title: 'Roblox - روبلوكس Robux',
+                category: 'mobile',
+                badge: 'شحن فوري ⚡',
+                img: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '80 Robux 💎', price: 80 },
+                    { name: '400 Robux 💎', price: 280 },
+                    { name: '800 Robux 💎', price: 520 },
+                    { name: '1700 Robux 💎', price: 990 }
+                ]
+            },
+            {
+                id: 'fc24',
+                title: 'EA SPORTS FC 24 / FIFA FC Points',
+                category: 'pc',
+                badge: 'جديد ⚽',
+                img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '500 FC Points', price: 240 },
+                    { name: '1050 FC Points', price: 480 },
+                    { name: '2800 FC Points', price: 1150 },
+                    { name: '5900 FC Points', price: 2300 }
+                ]
+            },
+            {
+                id: 'codm',
+                title: 'Call of Duty Mobile - كول أوف ديوتي',
+                category: 'mobile',
+                badge: 'مميز 💣',
+                img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '80 CP', price: 80 },
+                    { name: '420 CP', price: 260 },
+                    { name: '880 CP', price: 520 },
+                    { name: '2400 CP', price: 1250 }
+                ]
+            },
+            {
+                id: 'valorant',
+                title: 'Valorant VP - فالورانت نقاط',
+                category: 'pc',
+                badge: 'سريع 🎯',
+                img: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: '475 VP', price: 190 },
+                    { name: '1000 VP', price: 380 },
+                    { name: '2050 VP', price: 750 },
+                    { name: '3650 VP', price: 1300 }
+                ]
+            },
+            {
+                id: 'playstation',
+                title: 'بطاقات بلايستيشن PlayStation Store',
+                category: 'giftcards',
+                badge: 'أمريكي/سعودي 🎮',
+                img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: 'بطاقة 5$ (دولار أمريكي)', price: 280 },
+                    { name: 'بطاقة 10$ (دولار أمريكي)', price: 550 },
+                    { name: 'بطاقة 20$ (دولار أمريكي)', price: 1080 },
+                    { name: 'بطاقة 50$ (دولار أمريكي)', price: 2650 }
+                ]
+            },
+            {
+                id: 'steam',
+                title: 'بطاقات ستيم كارد Steam Wallet',
+                category: 'giftcards',
+                badge: 'شحن حسابات 💻',
+                img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: 'Steam Wallet $5', price: 280 },
+                    { name: 'Steam Wallet $10', price: 550 },
+                    { name: 'Steam Wallet $20', price: 1090 }
+                ]
+            },
+            {
+                id: 'xbox',
+                title: 'بطاقات إكس بوكس Xbox Game Pass',
+                category: 'giftcards',
+                badge: 'اشتراكات 🟢',
+                img: 'https://images.unsplash.com/photo-1600861194942-f883de0dfe96?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: 'Game Pass Ultimate (شهر واحد)', price: 320 },
+                    { name: 'Game Pass Ultimate (3 شهور)', price: 890 },
+                    { name: 'كارت 10$ Xbox Gift Card', price: 550 }
+                ]
+            },
+            {
+                id: 'itunes',
+                title: 'بطاقات أبل أيتونز iTunes Gift Cards',
+                category: 'giftcards',
+                badge: 'آيفون وآيباد 🍏',
+                img: 'https://images.unsplash.com/photo-1563206767-5b18f218e8de?auto=format&fit=crop&q=80&w=300',
+                packages: [
+                    { name: 'iTunes Card 5$', price: 290 },
+                    { name: 'iTunes Card 10$', price: 560 },
+                    { name: 'iTunes Card 25$', price: 1350 }
+                ]
+            }
+        ];
+
+        let selectedGame = null;
+        let selectedPackage = null;
+        let currentCategory = 'all';
+
+        // Render Games Function
+        function renderGames(filterText = '') {
+            const grid = document.getElementById('gamesGrid');
+            const noRes = document.getElementById('noResults');
+            grid.innerHTML = '';
+
+            const filtered = gamesData.filter(game => {
+                const matchesCategory = (currentCategory === 'all' || game.category === currentCategory);
+                const matchesSearch = game.title.toLowerCase().includes(filterText.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            document.getElementById('gamesCount').textContent = `تم العثور على (${filtered.length}) لعبة/بطاقة`;
+
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                noRes.classList.remove('hidden');
+                return;
+            } else {
+                grid.classList.remove('hidden');
+                noRes.classList.add('hidden');
+            }
+
+            filtered.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card bg-slate-900 border border-slate-800 hover:border-amber-500 rounded-2xl overflow-hidden shadow-lg transition-all cursor-pointer flex flex-col justify-between group';
+                card.onclick = () => openCheckoutModal(game.id);
+
+                const minPrice = Math.min(...game.packages.map(p => p.price));
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative overflow-hidden aspect-square">
+                            <img src="${game.img}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-300">
+                            <span class="absolute top-2 right-2 bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+                                ${game.badge}
+                            </span>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-extrabold text-white text-xs sm:text-sm line-clamp-1 group-hover:text-amber-400 transition-colors">${game.title}</h4>
+                            <span class="text-[10px] text-slate-400 block mt-1"><i class="fa-solid fa-bolt text-amber-400"></i> تسليم فوري بالـ ID</span>
+                        </div>
+                    </div>
+                    <div class="p-3 pt-0 flex items-center justify-between border-t border-slate-800/80 mt-2">
+                        <div>
+                            <span class="text-[9px] text-slate-400 block">يبدأ من</span>
+                            <span class="text-xs sm:text-sm font-black text-amber-400">${minPrice} ج.م</span>
+                        </div>
+                        <button class="bg-slate-800 group-hover:bg-amber-500 group-hover:text-slate-950 text-slate-300 p-2 rounded-xl transition-all">
+                            <i class="fa-solid fa-cart-shopping text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Category Filter Handling
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-amber-500', 'text-slate-950');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            event.currentTarget.classList.add('active', 'bg-amber-500', 'text-slate-950');
+            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300');
+            
+            const searchVal = document.getElementById('searchInput').value;
+            renderGames(searchVal);
+        }
+
+        // Search Input Handling
+        function filterGames() {
+            const query = document.getElementById('searchInput').value;
+            renderGames(query);
+        }
+
+        function syncAndFilter(val) {
+            document.getElementById('searchInput').value = val;
+            renderGames(val);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+            currentCategory = 'all';
+            renderGames();
+        }
+
+        // Open Checkout Modal
+        function openCheckoutModal(gameId) {
+            selectedGame = gamesData.find(g => g.id === gameId);
+            if (!selectedGame) return;
+
+            document.getElementById('modalGameImg').src = selectedGame.img;
+            document.getElementById('modalGameTitle').textContent = selectedGame.title;
+            document.getElementById('modalGameSub').textContent = `اختر الباقة للشحن بـ ID أو الحساب`;
+
+            // Render packages
+            const pkgContainer = document.getElementById('packagesContainer');
+            pkgContainer.innerHTML = '';
+
+            selectedGame.packages.forEach((pkg, index) => {
+                const pkgCard = document.createElement('div');
+                const isSelected = index === 0;
+                if (isSelected) selectedPackage = pkg;
+
+                pkgCard.className = `pkg-btn cursor-pointer p-3 rounded-xl border text-right transition-all flex items-center justify-between ${isSelected ? 'border-amber-500 bg-amber-500/10 text-white' : 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-slate-500'}`;
+                pkgCard.onclick = () => selectPackage(pkg, pkgCard);
+
+                pkgCard.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-gem text-amber-400 text-xs"></i>
+                        <span class="font-bold text-xs">${pkg.name}</span>
+                    </div>
+                    <span class="font-black text-amber-400 text-sm">${pkg.price} ج.م</span>
+                `;
+                pkgContainer.appendChild(pkgCard);
+            });
+
+            updateTotalPrice();
+            document.getElementById('checkoutModal').classList.add('modal-active');
+        }
+
+        function selectPackage(pkg, element) {
+            selectedPackage = pkg;
+            document.querySelectorAll('.pkg-btn').forEach(btn => {
+                btn.classList.remove('border-amber-500', 'bg-amber-500/10', 'text-white');
+                btn.classList.add('border-slate-700', 'bg-slate-800/80', 'text-slate-300');
+            });
+            element.classList.add('border-amber-500', 'bg-amber-500/10', 'text-white');
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            if (selectedPackage) {
+                document.getElementById('summaryPrice').textContent = `${selectedPackage.price} جنيه مصري`;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('checkoutModal').classList.remove('modal-active');
+        }
+
+        // Send Direct Order Message to WhatsApp (Target Number: 01090093053)
+        function submitOrderToWhatsapp() {
+            const custName = document.getElementById('custName').value.trim();
+            const playerId = document.getElementById('playerId').value.trim();
+            const custPhone = document.getElementById('custPhone').value.trim();
+            const payMethodRadio = document.querySelector('input[name="payMethod"]:checked');
+
+            if (!custName || !playerId || !custPhone) {
+                alert('عفواً! الرجاء ملء جميع البيانات المطلوب إدخالها (الاسم، معرف اللاعب ID، ورقم الموبايل) لتسهيل الشحن السريع.');
+                return;
+            }
+
+            if (!selectedPackage || !selectedGame) {
+                alert('الرجاء اختيار باقة الشحن أولاً!');
+                return;
+            }
+
+            const paymentMethod = payMethodRadio ? payMethodRadio.value : 'فودافون كاش';
+            const targetPhone = "201090093053"; // Format for WhatsApp API
+
+            // Constructing WhatsApp message string
+            const message = `👋 *طلب شحن جديد من الغشيم ستور* 🎮
+____________________________________
+🎮 *اللعبة / البطاقة:* ${selectedGame.title}
+💎 *الباقة المختارة:* ${selectedPackage.name}
+💰 *السعر الإجمالي:* ${selectedPackage.price} جنيه مصري
+____________________________________
+👤 *اسم العميل:* ${custName}
+🆔 *معرف اللاعب (ID):* ${playerId}
+📞 *رقم الموبايل:* ${custPhone}
+💳 *طريقة الدفع:* ${paymentMethod}
+____________________________________
+⚡ *يرجى تزويدي برقم التحويل لتأكيد عملية الشحن فوراً!*`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodedMessage}`;
+
+            // Open WhatsApp directly without external sites
+            window.open(whatsappUrl, '_blank');
+            closeModal();
+        }
+
+        // Gemini AI Chatbot Functionality
+        let aiChatOpen = false;
+
+        function toggleAiChat() {
+            const chatBox = document.getElementById('aiChatBox');
+            aiChatOpen = !aiChatOpen;
+            if (aiChatOpen) {
+                chatBox.classList.remove('hidden');
+                chatBox.classList.add('flex');
+            } else {
+                chatBox.classList.add('hidden');
+                chatBox.classList.remove('flex');
+            }
+        }
+
+        function handleAiKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendAiMessage();
+            }
+        }
+
+        async function sendAiMessage() {
+            const inputEl = document.getElementById('aiInput');
+            const userMsg = inputEl.value.trim();
+            if (!userMsg) return;
+
+            const messagesContainer = document.getElementById('aiChatMessages');
+
+            // Render User Message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'bg-amber-500 text-slate-950 p-2.5 rounded-2xl rounded-tl-none max-w-[85%] mr-auto font-bold text-xs shadow';
+            userBubble.textContent = userMsg;
+            messagesContainer.appendChild(userBubble);
+
+            inputEl.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Render Loading State
+            const loadingBubble = document.createElement('div');
+            loadingBubble.className = 'bg-slate-800 border border-slate-700 text-slate-400 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] text-xs animate-pulse';
+            loadingBubble.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-1"></i> مساعد الغشيم يفكر الآن...';
+            messagesContainer.appendChild(loadingBubble);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Prepare Gemini API Payload
+            const systemPrompt = `أنت مساعد الذكاء الاصطناعي المباشر الخاص بموقع "الغشيم ستور" (El Ghasheem Store)، وهو متجر مصري متألق لشحن الألعاب والبطاقات الرقمية (مثل ببجي، فري فاير، روبلوكس، فيفا، ستيم، بلايستيشن، إلخ).
+            طرق الدفع المتاحة في المتجر هي: فودافون كاش، أورنج كاش، اتصالات كاش، إنستا باي InstaPay، كروت البنك Visa/Mastercard، وفوري.
+            الأسعار في الموقع تبدأ من 80 جنيه مصري لكافة الألعاب.
+            رقم خدمة العملاء والواتساب الخاص بالشحن هو 01090093053.
+            قم بالرد بإيجاز، بطريقة ودودة ومحترفة باللهجة المصرية المفهومة والراقية. ساعد الزبائن في معرفة كيفية اختيار الباقة أو العثور على ID في اللعبة أو الشحن.`;
+
+            const apiKey = ""; // Canvas handles key at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userMsg }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                messagesContainer.removeChild(loadingBubble);
+
+                let aiResponseText = "عذراً! أواجه صعوبة مؤقتة في الاتصال. يمكنك التواصل المباشر مع الدعم على الواتساب 01090093053 وسيتم الرد عليك فوراً!";
+                
+                if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                    aiResponseText = data.candidates[0].content.parts[0].text;
+                }
+
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'bg-slate-800 border border-slate-700 text-slate-200 p-3 rounded-2xl rounded-tr-none max-w-[85%] space-y-1';
+                aiBubble.innerHTML = `<p class="font-bold text-amber-400 text-[10px]">مساعد الغشيم AI</p><p class="leading-relaxed">${aiResponseText.replace(/\n/g, '<br>')}</p>`;
+                messagesContainer.appendChild(aiBubble);
+
+            } catch (err) {
+                console.error(err);
+                messagesContainer.removeChild(loadingBubble);
+
+                const errorBubble = document.createElement('div');
+                errorBubble.className = 'bg-slate-800 border border-slate-700 text-slate-200 p-2.5 rounded-2xl rounded-tr-none max-w-[85%]';
+                errorBubble.textContent = "يمكنك الدخول مباشرة للشحن واختيار لعبتك وسنكون في خدمتك عبر الواتساب على الرقم: 01090093053.";
+                messagesContainer.appendChild(errorBubble);
+            }
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Initialize application on page load
+        window.onload = function() {
+            renderGames();
+        };
+    </script>
+</body>
+</html>
